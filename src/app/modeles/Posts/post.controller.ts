@@ -4,7 +4,11 @@ import commonRes from '../../utiles/commonResponse';
 import { PostServices } from './post.service';
 
 const createPost = catchAsync(async (req, res) => {
-  const result = await PostServices.createPostIntoDB(req.body, req.user);
+  const result = await PostServices.createPostIntoDB(
+    req.file,
+    req.body,
+    req.user,
+  );
   commonRes(res, {
     statusCode: httpStatus.OK,
     success: true,
