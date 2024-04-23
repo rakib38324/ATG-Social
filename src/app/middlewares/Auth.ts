@@ -5,9 +5,8 @@ import catchAsync from '../utiles/catchAsync';
 import AppError from '../errors/appError';
 import config from '../config/config';
 import { User } from '../modeles/UsersRegistration/userRegistration.model';
-import { TUserRole } from '../modeles/UsersRegistration/userRegistration.interface';
 
-const Auth = (...requiredRoles: TUserRole[]) => {
+const Auth = () => {
   return catchAsync(
     async (req: Request, response: Response, next: NextFunction) => {
       const token = req.headers.authorization;
@@ -28,7 +27,7 @@ const Auth = (...requiredRoles: TUserRole[]) => {
         throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
       }
 
-      const { role, email, iat } = decoded;
+      const { email, iat } = decoded;
 
       //===>check if the user is exists
 
@@ -48,10 +47,7 @@ const Auth = (...requiredRoles: TUserRole[]) => {
         throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
       }
 
-      if (requiredRoles && !requiredRoles.includes(role)) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
-      }
-
+    
       req.user = decoded;
 
       next();
