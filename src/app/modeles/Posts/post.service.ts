@@ -65,9 +65,25 @@ const deletePostFromDB = async (id: string, payload: TPost) => {
   return result;
 };
 
+const updatePostFromDB = async (_id: string, payload: Partial<TPost>) => {
+  const isExistPost = await Post.findById({ _id });
+
+  if (!isExistPost) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not Found.');
+  }
+
+  const result = await Post.findOneAndUpdate({ _id }, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return result;
+};
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostFromDB,
   getSinglePostFromDB,
   deletePostFromDB,
+  updatePostFromDB,
 };

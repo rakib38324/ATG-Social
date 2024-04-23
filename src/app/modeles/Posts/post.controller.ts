@@ -49,9 +49,21 @@ const deletePost = catchAsync(async (req, res) => {
   });
 });
 
+const updatePost = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await PostServices.updatePostFromDB(id, req.body);
+  commonRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Post Update Successfully',
+    data: result,
+  });
+});
+
 export const postControllers = {
   createPost,
   getAllPost,
   getSinglePost,
   deletePost,
+  updatePost,
 };

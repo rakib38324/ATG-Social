@@ -25,4 +25,10 @@ router.get('/:id', postControllers.getSinglePost);
 
 router.delete('/:id', postControllers.deletePost);
 
+router.patch(
+  '/:id',
+  ValidateRequest(PostValidation.updatePostValidationSchema),
+  postControllers.updatePost,
+);
+
 export const postRouters = router;
