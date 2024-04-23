@@ -19,4 +19,10 @@ router.post(
   postControllers.createPost,
 );
 
+router.get('/', postControllers.getAllPost);
+
+router.get('/:id', postControllers.getSinglePost);
+
+router.delete('/:id', postControllers.deletePost);
+
 export const postRouters = router;
