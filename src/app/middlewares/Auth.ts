@@ -47,7 +47,6 @@ const Auth = () => {
         throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
       }
 
-    
       req.user = decoded;
 
       next();

@@ -9,7 +9,7 @@ export const sendEmail = async (to: string, html: string) => {
     auth: {
       // TODO: replace `user` and `pass` values from <https://forwardemail.net>
       user: 'aminul15-3832@diu.edu.bd',
-      pass: 'dnxe eslk ijid ttyz',
+      pass: 'jjvk pqse pdxp nyjk',
     },
   });
 
@@ -17,7 +17,7 @@ export const sendEmail = async (to: string, html: string) => {
     from: 'aminul15-3832@diu.edu.bd', // sender address
     to, // list of receivers
     subject:
-      'Book Management Password Reset Link and Rewset your Password with in 10 minutes.', // Subject line
+      'ATG Social is send Password Reset Link and Reset your Password with in 10 minutes.', // Subject line
     text: '', // plain text body
     html, // html body
   });

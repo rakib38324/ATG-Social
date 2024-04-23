@@ -95,54 +95,6 @@ const changePassword = async (
   return null;
 };
 
-const refreshToken = async (token: string) => {
-  if (!token) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized!');
-  }
-
-  // invalid token - synchronous
-  //===> check the if the token valid
-
-  const decoded = VerifyToken(token, config.jwt_refresh_secret as string);
-
-  const { email, iat } = decoded;
-
-  //===>check if the user is exists
-
-  const isUserExists = await User.isUserExistsByEmail(email);
-
-  if (!isUserExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'This user not found!');
-  }
-
-  if (
-    isUserExists.passwordChangedAt &&
-    User.isJWTIssuedBeforePasswordChanged(
-      isUserExists.passwordChangedAt,
-      iat as number,
-    )
-  ) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
-  }
-
-  //-====> access granted: send accessToken, RefreshToken
-  const jwtPayload = {
-    email: isUserExists?.email,
-    username: isUserExists?.username,
-  };
-
-  //===========> create token and sent to the client
-  const accessToken = createToken(
-    jwtPayload,
-    config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string,
-  );
-
-  return {
-    accessToken,
-  };
-};
-
 const forgetPassword = async (email: string) => {
   const isUserExists = await User.isUserExistsByEmail(email);
 
@@ -209,7 +161,6 @@ const resetPassword = async (
 export const AuthServices = {
   loginUser,
   changePassword,
-  refreshToken,
   forgetPassword,
   resetPassword,
 };
