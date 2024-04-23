@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-export type TJwtPayload = { email: string; username: string; role: string };
+export type TJwtPayload = { email: string; username: string };
 
 export const createToken = (
   jwtPayload: TJwtPayload,

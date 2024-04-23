@@ -11,10 +11,13 @@ import { sendEmail } from '../../utiles/sendEmail';
 const loginUser = async (payload: TLoginUser) => {
   //===>check if the user is exists
 
-  const isUserExists = await User.isUserExistsByEmail(payload.email);
+  const isUserExists = await User.isUserExistsByUserName(payload.username);
 
   if (!isUserExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'User not found! Check your username.',
+    );
   }
 
   ///====> checking if the password is correct
@@ -31,7 +34,6 @@ const loginUser = async (payload: TLoginUser) => {
   const jwtPayload: TJwtPayload = {
     email: isUserExists?.email,
     username: isUserExists?.username,
-    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
@@ -127,7 +129,6 @@ const refreshToken = async (token: string) => {
   const jwtPayload = {
     email: isUserExists?.email,
     username: isUserExists?.username,
-    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
@@ -152,7 +153,6 @@ const forgetPassword = async (email: string) => {
   const jwtPayload = {
     email: isUserExists?.email,
     username: isUserExists?.username,
-    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
