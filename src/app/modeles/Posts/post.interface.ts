@@ -6,5 +6,5 @@ export type TPost = {
   description: string;
   date?: string;
   author?: ObjectId;
-  image_public_id?: string;
+  // image_public_id: string;
 };

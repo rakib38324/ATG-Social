@@ -18,7 +18,7 @@ const catchAsync_1 = __importDefault(require("../../utiles/catchAsync"));
 const commonResponse_1 = __importDefault(require("../../utiles/commonResponse"));
 const post_service_1 = require("./post.service");
 const createPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_service_1.PostServices.createPostIntoDB(req.file, req.body, req.user);
+    const result = yield post_service_1.PostServices.createPostIntoDB(req.body, req.user);
     (0, commonResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -47,7 +47,7 @@ const getSinglePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 const deletePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield post_service_1.PostServices.deletePostFromDB(id, req.body, req.user);
+    const result = yield post_service_1.PostServices.deletePostFromDB(id, req.user);
     (0, commonResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -57,7 +57,7 @@ const deletePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 const updatePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield post_service_1.PostServices.updatePostFromDB(id, req.body, req.file, req.user);
+    const result = yield post_service_1.PostServices.updatePostFromDB(id, req.body, req.user);
     (0, commonResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

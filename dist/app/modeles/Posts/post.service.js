@@ -17,21 +17,24 @@ const userRegistration_model_1 = require("../UsersRegistration/userRegistration.
 const appError_1 = __importDefault(require("../../errors/appError"));
 const http_status_1 = __importDefault(require("http-status"));
 const post_model_1 = require("./post.model");
-const sendImagetoCloudinary_1 = require("../../utiles/sendImagetoCloudinary");
-const deleteImageFromCloudinary_1 = require("../../utiles/deleteImageFromCloudinary");
-const createPostIntoDB = (file, payload, authorInfo) => __awaiter(void 0, void 0, void 0, function* () {
+// import { sendImageToCloudinary } from '../../utiles/sendImagetoCloudinary';
+// import { deleteImageFromCloudinary } from '../../utiles/deleteImageFromCloudinary';
+const createPostIntoDB = (payload, authorInfo) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = authorInfo;
     const isUserExists = yield userRegistration_model_1.User.isUserExistsByEmail(email);
     if (!isUserExists) {
         throw new appError_1.default(http_status_1.default.NOT_FOUND, 'User not found!');
     }
-    const imageName = `ATG.Social_${payload.title}`;
-    const path = file === null || file === void 0 ? void 0 : file.path;
-    if (!path) {
-        throw new appError_1.default(http_status_1.default.BAD_REQUEST, 'Please add post image.');
-    }
-    const { secure_url, public_id } = yield (0, sendImagetoCloudinary_1.sendImageToCloudinary)(imageName, path);
-    const data = Object.assign(Object.assign({}, payload), { date: new Date(), author: isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id, image: secure_url, image_public_id: public_id });
+    // const imageName = `ATG.Social_${payload.title}`;
+    // const path = file?.path;
+    // if (!path) {
+    //   throw new AppError(httpStatus.BAD_REQUEST, 'Please add post image.');
+    // }
+    // const { secure_url, public_id }: any = await sendImageToCloudinary(
+    //   imageName,
+    //   path,
+    // );
+    const data = Object.assign(Object.assign({}, payload), { date: new Date(), author: isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id });
     const post = yield post_model_1.Post.create(data);
     return post;
 });
@@ -46,7 +49,7 @@ const getSinglePostFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     }
     return result;
 });
-const deletePostFromDB = (id, payload, user) => __awaiter(void 0, void 0, void 0, function* () {
+const deletePostFromDB = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
     const isExistPost = yield post_model_1.Post.findById({ _id: id });
     if (!isExistPost) {
         throw new appError_1.default(http_status_1.default.NOT_FOUND, 'Post not Found.');
@@ -56,17 +59,20 @@ const deletePostFromDB = (id, payload, user) => __awaiter(void 0, void 0, void 0
     if (userId !== postAuthor) {
         throw new appError_1.default(http_status_1.default.UNAUTHORIZED, 'Unauthorized. You are not post owner');
     }
-    const public_id = payload === null || payload === void 0 ? void 0 : payload.image_public_id;
-    if (!public_id) {
-        return new appError_1.default(http_status_1.default.BAD_REQUEST, 'Please provide Image public Id');
-    }
+    // const public_id = payload?.image_public_id;
+    // if (!public_id) {
+    //   return new AppError(
+    //     httpStatus.BAD_REQUEST,
+    //     'Please provide Image public Id',
+    //   );
+    // }
     const result = yield post_model_1.Post.deleteOne({ _id: id });
-    if (public_id) {
-        (0, deleteImageFromCloudinary_1.deleteImageFromCloudinary)(public_id);
-    }
+    // if (public_id) {
+    //   deleteImageFromCloudinary(public_id);
+    // }
     return result;
 });
-const updatePostFromDB = (_id, payload, file, user) => __awaiter(void 0, void 0, void 0, function* () {
+const updatePostFromDB = (_id, payload, user) => __awaiter(void 0, void 0, void 0, function* () {
     const isExistPost = yield post_model_1.Post.findById({ _id });
     if (!isExistPost) {
         throw new appError_1.default(http_status_1.default.NOT_FOUND, 'Post not Found.');
@@ -76,19 +82,11 @@ const updatePostFromDB = (_id, payload, file, user) => __awaiter(void 0, void 0,
     if (userId !== postAuthor) {
         throw new appError_1.default(http_status_1.default.UNAUTHORIZED, 'Unauthorized. You are not post owner');
     }
-    if (file) {
-        const imageName = `ATG.Social_${_id}`;
-        const path = file === null || file === void 0 ? void 0 : file.path;
-        const { secure_url, public_id } = yield (0, sendImagetoCloudinary_1.sendImageToCloudinary)(imageName, path);
-        const newData = Object.assign(Object.assign({}, payload), { image: secure_url, image_public_id: public_id });
-        if (payload === null || payload === void 0 ? void 0 : payload.image_public_id) {
-            (0, deleteImageFromCloudinary_1.deleteImageFromCloudinary)(payload === null || payload === void 0 ? void 0 : payload.image_public_id);
-        }
-        const result = yield post_model_1.Post.findOneAndUpdate({ _id }, newData, {
-            new: true,
-            runValidators: true,
-        });
-        return result;
+    if (payload === null || payload === void 0 ? void 0 : payload.author) {
+        throw new appError_1.default(http_status_1.default.UNAUTHORIZED, 'Unauthorized. You are not Super Admin');
+    }
+    if (payload === null || payload === void 0 ? void 0 : payload.date) {
+        throw new appError_1.default(http_status_1.default.BAD_REQUEST, 'Post date not updatable.');
     }
     const result = yield post_model_1.Post.findOneAndUpdate({ _id }, payload, {
         new: true,

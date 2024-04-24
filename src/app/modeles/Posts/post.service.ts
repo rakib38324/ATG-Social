@@ -5,14 +5,10 @@ import { User } from '../UsersRegistration/userRegistration.model';
 import AppError from '../../errors/appError';
 import httpStatus from 'http-status';
 import { Post } from './post.model';
-import { sendImageToCloudinary } from '../../utiles/sendImagetoCloudinary';
-import { deleteImageFromCloudinary } from '../../utiles/deleteImageFromCloudinary';
+// import { sendImageToCloudinary } from '../../utiles/sendImagetoCloudinary';
+// import { deleteImageFromCloudinary } from '../../utiles/deleteImageFromCloudinary';
 
-const createPostIntoDB = async (
-  file: any,
-  payload: TPost,
-  authorInfo: JwtPayload,
-) => {
+const createPostIntoDB = async (payload: TPost, authorInfo: JwtPayload) => {
   const { email } = authorInfo;
   const isUserExists = await User.isUserExistsByEmail(email);
 
@@ -20,22 +16,22 @@ const createPostIntoDB = async (
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
   }
 
-  const imageName = `ATG.Social_${payload.title}`;
-  const path = file?.path;
-  if (!path) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Please add post image.');
-  }
-  const { secure_url, public_id }: any = await sendImageToCloudinary(
-    imageName,
-    path,
-  );
+  // const imageName = `ATG.Social_${payload.title}`;
+  // const path = file?.path;
+  // if (!path) {
+  //   throw new AppError(httpStatus.BAD_REQUEST, 'Please add post image.');
+  // }
+  // const { secure_url, public_id }: any = await sendImageToCloudinary(
+  //   imageName,
+  //   path,
+  // );
 
   const data = {
     ...payload,
     date: new Date(),
     author: isUserExists?._id,
-    image: secure_url,
-    image_public_id: public_id,
+    // image: secure_url,
+    // image_public_id: public_id,
   };
 
   const post = await Post.create(data);
@@ -56,11 +52,7 @@ const getSinglePostFromDB = async (id: string) => {
   return result;
 };
 
-const deletePostFromDB = async (
-  id: string,
-  payload: TPost,
-  user: JwtPayload,
-) => {
+const deletePostFromDB = async (id: string, user: JwtPayload) => {
   const isExistPost = await Post.findById({ _id: id });
 
   if (!isExistPost) {
@@ -76,25 +68,24 @@ const deletePostFromDB = async (
     );
   }
 
-  const public_id = payload?.image_public_id;
-  if (!public_id) {
-    return new AppError(
-      httpStatus.BAD_REQUEST,
-      'Please provide Image public Id',
-    );
-  }
+  // const public_id = payload?.image_public_id;
+  // if (!public_id) {
+  //   return new AppError(
+  //     httpStatus.BAD_REQUEST,
+  //     'Please provide Image public Id',
+  //   );
+  // }
 
   const result = await Post.deleteOne({ _id: id });
-  if (public_id) {
-    deleteImageFromCloudinary(public_id);
-  }
+  // if (public_id) {
+  //   deleteImageFromCloudinary(public_id);
+  // }
   return result;
 };
 
 const updatePostFromDB = async (
   _id: string,
   payload: Partial<TPost>,
-  file: any,
   user: JwtPayload,
 ) => {
   const isExistPost = await Post.findById({ _id });
@@ -113,29 +104,15 @@ const updatePostFromDB = async (
     );
   }
 
-  if (file) {
-    const imageName = `ATG.Social_${_id}`;
-    const path = file?.path;
-    const { secure_url, public_id }: any = await sendImageToCloudinary(
-      imageName,
-      path,
+  if (payload?.author) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'Unauthorized. You are not Super Admin',
     );
+  }
 
-    const newData = {
-      ...payload,
-      image: secure_url,
-      image_public_id: public_id,
-    };
-    if (payload?.image_public_id) {
-      deleteImageFromCloudinary(payload?.image_public_id);
-    }
-
-    const result = await Post.findOneAndUpdate({ _id }, newData, {
-      new: true,
-      runValidators: true,
-    });
-
-    return result;
+  if (payload?.date) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Post date not updatable.');
   }
 
   const result = await Post.findOneAndUpdate({ _id }, payload, {
