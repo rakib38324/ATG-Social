@@ -4,6 +4,8 @@ import commonRes from '../../utiles/commonResponse';
 import { PostServices } from './post.service';
 
 const createPost = catchAsync(async (req, res) => {
+  console.log('hello: ', req.file);
+  console.log('hello: ', req?.body);
   const result = await PostServices.createPostIntoDB(
     req.file,
     req.body,
@@ -51,7 +53,7 @@ const deletePost = catchAsync(async (req, res) => {
 
 const updatePost = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await PostServices.updatePostFromDB(id, req.body);
+  const result = await PostServices.updatePostFromDB(id, req.body, req.file);
   commonRes(res, {
     statusCode: httpStatus.OK,
     success: true,

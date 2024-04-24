@@ -20,7 +20,7 @@ const createPostIntoDB = async (
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
   }
 
-  const imageName = `ATG.Social${payload.title}`;
+  const imageName = `ATG.Social_${payload.title}`;
   const path = file?.path;
   const { secure_url, public_id }: any = await sendImageToCloudinary(
     imageName,
@@ -65,11 +65,40 @@ const deletePostFromDB = async (id: string, payload: TPost) => {
   return result;
 };
 
-const updatePostFromDB = async (_id: string, payload: Partial<TPost>) => {
+const updatePostFromDB = async (
+  _id: string,
+  payload: Partial<TPost>,
+  file: any,
+) => {
   const isExistPost = await Post.findById({ _id });
 
   if (!isExistPost) {
     throw new AppError(httpStatus.NOT_FOUND, 'Post not Found.');
+  }
+
+  if (file) {
+    const imageName = `ATG.Social_${_id}`;
+    const path = file?.path;
+    const { secure_url, public_id }: any = await sendImageToCloudinary(
+      imageName,
+      path,
+    );
+
+    const newData = {
+      ...payload,
+      image: secure_url,
+      image_public_id: public_id,
+    };
+    if (payload?.image_public_id) {
+      deleteImageFromCloudinary(payload?.image_public_id);
+    }
+
+    const result = await Post.findOneAndUpdate({ _id }, newData, {
+      new: true,
+      runValidators: true,
+    });
+
+    return result;
   }
 
   const result = await Post.findOneAndUpdate({ _id }, payload, {

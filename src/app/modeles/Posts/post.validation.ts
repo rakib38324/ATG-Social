@@ -17,7 +17,9 @@ const createPostValidationSchema = z.object({
 const updatePostValidationSchema = z.object({
   body: z.object({
     image: z.string().optional(),
-    image_public_id: z.string().optional(),
+    image_public_id: z.string({
+      required_error: 'Image Public ID is required.',
+    }),
     title: z.string({ required_error: 'Title is required.' }).optional(),
     description: z
       .string({ required_error: 'Description is required.' })

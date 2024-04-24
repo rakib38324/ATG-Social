@@ -19,14 +19,21 @@ router.post(
   postControllers.createPost,
 );
 
-router.get('/', postControllers.getAllPost);
+router.get('/', Auth(), postControllers.getAllPost);
 
-router.get('/:id', postControllers.getSinglePost);
+router.get('/:id', Auth(), postControllers.getSinglePost);
 
-router.delete('/:id', postControllers.deletePost);
+router.delete('/:id', Auth(), postControllers.deletePost);
 
-router.patch(
+router.post(
   '/:id',
+  Auth(),
+  upload.single('file'),
+  (req: Request, response: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
+
   ValidateRequest(PostValidation.updatePostValidationSchema),
   postControllers.updatePost,
 );
