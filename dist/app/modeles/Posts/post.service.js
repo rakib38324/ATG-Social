@@ -28,7 +28,7 @@ const createPostIntoDB = (file, payload, authorInfo) => __awaiter(void 0, void 0
     const imageName = `ATG.Social_${payload.title}`;
     const path = file === null || file === void 0 ? void 0 : file.path;
     if (!path) {
-        throw new appError_1.default(http_status_1.default.BAD_REQUEST, "Please add post image.");
+        throw new appError_1.default(http_status_1.default.BAD_REQUEST, 'Please add post image.');
     }
     const { secure_url, public_id } = yield (0, sendImagetoCloudinary_1.sendImageToCloudinary)(imageName, path);
     const data = Object.assign(Object.assign({}, payload), { date: new Date(), author: isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id, image: secure_url, image_public_id: public_id });
