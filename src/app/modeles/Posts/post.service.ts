@@ -22,6 +22,9 @@ const createPostIntoDB = async (
 
   const imageName = `ATG.Social_${payload.title}`;
   const path = file?.path;
+  if (!path) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Please add post image.');
+  }
   const { secure_url, public_id }: any = await sendImageToCloudinary(
     imageName,
     path,

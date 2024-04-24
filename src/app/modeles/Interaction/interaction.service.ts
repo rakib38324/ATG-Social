@@ -15,7 +15,7 @@ const createInteractionIntoDB = async (
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
   }
 
-  const isPostExists = await Post.findById({ _id: payload?.postId});
+  const isPostExists = await Post.findById({ _id: payload?.postId });
 
   if (!isPostExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Post not found!');

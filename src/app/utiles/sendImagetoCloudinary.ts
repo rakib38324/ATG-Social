@@ -23,6 +23,7 @@ export const sendImageToCloudinary = (image_name: string, path: string) => {
         //delete local folder images
         fs.unlink(path, (err) => {
           if (err) {
+            console.log('File not deleted.');
             reject(err);
           } else {
             console.log('File deleted.');

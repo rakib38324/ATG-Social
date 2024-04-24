@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongoose';
 
 export type TPost = {
-  image?: string;
+  image: string;
   title: string;
   description: string;
   date?: string;
