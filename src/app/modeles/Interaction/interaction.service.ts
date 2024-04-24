@@ -4,6 +4,7 @@ import { User } from '../UsersRegistration/userRegistration.model';
 import httpStatus from 'http-status';
 import AppError from '../../errors/appError';
 import { Interaction } from './interaction.model';
+import { Post } from '../Posts/post.model';
 
 const createInteractionIntoDB = async (
   payload: TInteraction,
@@ -12,6 +13,12 @@ const createInteractionIntoDB = async (
   const isUserExists = await User.findById({ _id: user._id });
   if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+  }
+
+  const isPostExists = await Post.findById({ _id: payload?.postId});
+
+  if (!isPostExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not found!');
   }
 
   const isInteractionAlive = await Interaction.findOne({
