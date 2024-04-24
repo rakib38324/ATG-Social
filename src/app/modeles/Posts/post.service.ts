@@ -46,11 +46,33 @@ const getAllPostFromDB = async () => {
 };
 
 const getSinglePostFromDB = async (id: string) => {
-  const result = await Post.findOne({ _id: id }).populate('author');
+  const result = await Post.findById({ _id: id }).populate('author');
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not found.');
+  }
   return result;
 };
 
-const deletePostFromDB = async (id: string, payload: TPost) => {
+const deletePostFromDB = async (
+  id: string,
+  payload: TPost,
+  user: JwtPayload,
+) => {
+  const isExistPost = await Post.findById({ _id: id });
+
+  if (!isExistPost) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not Found.');
+  }
+  const userId = user?._id;
+  const postAuthor = `${isExistPost?.author}`;
+
+  if (userId !== postAuthor) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'Unauthorized. You are not post owner',
+    );
+  }
+
   const public_id = payload?.image_public_id;
   if (!public_id) {
     return new AppError(
@@ -58,6 +80,7 @@ const deletePostFromDB = async (id: string, payload: TPost) => {
       'Please provide Image public Id',
     );
   }
+
   const result = await Post.deleteOne({ _id: id });
   if (public_id) {
     deleteImageFromCloudinary(public_id);
@@ -69,11 +92,22 @@ const updatePostFromDB = async (
   _id: string,
   payload: Partial<TPost>,
   file: any,
+  user: JwtPayload,
 ) => {
   const isExistPost = await Post.findById({ _id });
 
   if (!isExistPost) {
     throw new AppError(httpStatus.NOT_FOUND, 'Post not Found.');
+  }
+
+  const userId = user?._id;
+  const postAuthor = `${isExistPost?.author}`;
+
+  if (userId !== postAuthor) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'Unauthorized. You are not post owner',
+    );
   }
 
   if (file) {

@@ -34,6 +34,7 @@ const loginUser = async (payload: TLoginUser) => {
   const jwtPayload: TJwtPayload = {
     email: isUserExists?.email,
     username: isUserExists?.username,
+    _id: isUserExists?._id,
   };
 
   //===========> create token and sent to the client
@@ -105,6 +106,7 @@ const forgetPassword = async (email: string) => {
   const jwtPayload = {
     email: isUserExists?.email,
     username: isUserExists?.username,
+    _id: isUserExists?._id,
   };
 
   //===========> create token and sent to the client
