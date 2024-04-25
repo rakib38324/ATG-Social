@@ -31,7 +31,7 @@ const getCommentWithPostIdInFromDB = (_id) => __awaiter(void 0, void 0, void 0, 
     if (!isPostExists) {
         throw new appError_1.default(http_status_1.default.NOT_FOUND, 'Post not found!');
     }
-    const allComment = yield comment_model_1.Comment.find({ postId: _id });
+    const allComment = yield comment_model_1.Comment.find({ postId: _id }).populate("commentAuthor");
     return allComment;
 });
 exports.CommentServices = {

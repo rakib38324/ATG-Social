@@ -17,7 +17,7 @@ export const sendEmail = async (to: string, html: string) => {
     from: 'aminul15-3832@diu.edu.bd', // sender address
     to, // list of receivers
     subject:
-      'ATG Social is send Password Reset Link and Reset your Password with in 10 minutes.', // Subject line
+      'ATG Social is send Password Reset Link and Reset your Password with in 20 minutes.', // Subject line
     text: '', // plain text body
     html, // html body
   });

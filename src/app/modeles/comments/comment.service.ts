@@ -26,7 +26,9 @@ const getCommentWithPostIdInFromDB = async (_id: string) => {
   if (!isPostExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Post not found!');
   }
-  const allComment = await Comment.find({ postId: _id });
+  const allComment = await Comment.find({ postId: _id }).populate(
+    'commentAuthor',
+  );
 
   return allComment;
 };

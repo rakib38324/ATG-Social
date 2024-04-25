@@ -77,7 +77,7 @@ const forgetPassword = (email) => __awaiter(void 0, void 0, void 0, function* ()
         _id: isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id,
     };
     //===========> create token and sent to the client
-    const resetToken = (0, auth_utillis_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, '10m');
+    const resetToken = (0, auth_utillis_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, '20m');
     const resetUILink = `${config_1.default.reset_password_ui_link}?email=${isUserExists.email}&token=${resetToken}`;
     (0, sendEmail_1.sendEmail)(isUserExists.email, resetUILink);
     return `Reset link sent your email: ${isUserExists.email}`;

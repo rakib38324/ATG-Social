@@ -22,7 +22,7 @@ router.post('/create-post', (0, Auth_1.default)(),
 router.get('/', (0, Auth_1.default)(), post_controller_1.postControllers.getAllPost);
 router.get('/:id', (0, Auth_1.default)(), post_controller_1.postControllers.getSinglePost);
 router.delete('/:id', (0, Auth_1.default)(), post_controller_1.postControllers.deletePost);
-router.post('/:id', (0, Auth_1.default)(), 
+router.patch('/:id', (0, Auth_1.default)(), 
 // upload.single('file'),
 // (req: Request, response: Response, next: NextFunction) => {
 //   req.body = JSON.parse(req.body.data);

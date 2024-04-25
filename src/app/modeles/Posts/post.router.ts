@@ -26,7 +26,7 @@ router.get('/:id', Auth(), postControllers.getSinglePost);
 
 router.delete('/:id', Auth(), postControllers.deletePost);
 
-router.post(
+router.patch(
   '/:id',
   Auth(),
   // upload.single('file'),

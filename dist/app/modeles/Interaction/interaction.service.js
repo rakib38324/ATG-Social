@@ -36,7 +36,7 @@ const createInteractionIntoDB = (payload, user) => __awaiter(void 0, void 0, voi
         const result = yield interaction_model_1.Interaction.create(data);
         const actionData = {
             actions: (isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.actions) + 1,
-            InteractedPeopleId: [isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id]
+            InteractedPeopleId: [isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id],
         };
         yield post_model_1.Post.findByIdAndUpdate({ _id: payload === null || payload === void 0 ? void 0 : payload.postId }, actionData, {
             new: true,
@@ -57,7 +57,10 @@ const createInteractionIntoDB = (payload, user) => __awaiter(void 0, void 0, voi
         });
         const actionData = {
             actions: (isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.actions) + 1,
-            InteractedPeopleId: [...isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.InteractedPeopleId, `${isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id}`]
+            InteractedPeopleId: [
+                ...isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.InteractedPeopleId,
+                `${isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id}`,
+            ],
             // isPostExists?.InteractedPeopleId?.push(`${user._id}`)
         };
         yield post_model_1.Post.findByIdAndUpdate({ _id: payload === null || payload === void 0 ? void 0 : payload.postId }, actionData, {
@@ -77,10 +80,10 @@ const createInteractionIntoDB = (payload, user) => __awaiter(void 0, void 0, voi
             new: true,
             runValidators: true,
         });
-        const filteredInteractedPeopleId = (_a = isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.InteractedPeopleId) === null || _a === void 0 ? void 0 : _a.filter(id => id !== `${user._id}`);
+        const filteredInteractedPeopleId = (_a = isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.InteractedPeopleId) === null || _a === void 0 ? void 0 : _a.filter((id) => id !== `${user._id}`);
         const actionData = {
             actions: (isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.actions) - 1,
-            InteractedPeopleId: filteredInteractedPeopleId
+            InteractedPeopleId: filteredInteractedPeopleId,
         };
         yield post_model_1.Post.findByIdAndUpdate({ _id: payload === null || payload === void 0 ? void 0 : payload.postId }, actionData, {
             new: true,

@@ -29,7 +29,7 @@ const sendEmail = (to, html) => __awaiter(void 0, void 0, void 0, function* () {
     yield transporter.sendMail({
         from: 'aminul15-3832@diu.edu.bd', // sender address
         to, // list of receivers
-        subject: 'ATG Social is send Password Reset Link and Reset your Password with in 10 minutes.', // Subject line
+        subject: 'ATG Social is send Password Reset Link and Reset your Password with in 20 minutes.', // Subject line
         text: '', // plain text body
         html, // html body
     });
