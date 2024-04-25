@@ -34,7 +34,7 @@ const createPostIntoDB = (payload, authorInfo) => __awaiter(void 0, void 0, void
     //   imageName,
     //   path,
     // );
-    const data = Object.assign(Object.assign({}, payload), { date: new Date(), author: isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id });
+    const data = Object.assign(Object.assign({}, payload), { date: new Date(), author: isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id, actions: 0 });
     const post = yield post_model_1.Post.create(data);
     return post;
 });

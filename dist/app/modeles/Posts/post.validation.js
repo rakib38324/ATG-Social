@@ -13,6 +13,7 @@ const createPostValidationSchema = zod_1.z.object({
             .max(260),
         date: zod_1.z.string().optional(),
         author: zod_1.z.string().optional(),
+        actions: zod_1.z.number().optional()
     }),
 });
 const updatePostValidationSchema = zod_1.z.object({
@@ -29,6 +30,7 @@ const updatePostValidationSchema = zod_1.z.object({
             .optional(),
         date: zod_1.z.string().optional(),
         author: zod_1.z.string().optional(),
+        actions: zod_1.z.number().optional()
     }),
 });
 exports.PostValidation = {

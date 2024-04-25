@@ -7,7 +7,8 @@ const PostSchema = new Schema<TPost>({
   description: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'Candidate' },
   date: { type: String },
-  // image_public_id: { type: String, required: true },
+  actions: { type: Number },
+  InteractedPeopleId: [{ type: String }],
 });
 
 export const Post = model<TPost>('Post', PostSchema);

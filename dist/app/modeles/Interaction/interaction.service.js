@@ -19,6 +19,7 @@ const appError_1 = __importDefault(require("../../errors/appError"));
 const interaction_model_1 = require("./interaction.model");
 const post_model_1 = require("../Posts/post.model");
 const createInteractionIntoDB = (payload, user) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const isUserExists = yield userRegistration_model_1.User.findById({ _id: user._id });
     if (!isUserExists) {
         throw new appError_1.default(http_status_1.default.NOT_FOUND, 'User not found!');
@@ -31,18 +32,35 @@ const createInteractionIntoDB = (payload, user) => __awaiter(void 0, void 0, voi
         postId: payload === null || payload === void 0 ? void 0 : payload.postId,
     });
     if (!isInteractionAlive) {
-        const data = Object.assign(Object.assign({}, payload), { interactionAuthId: user === null || user === void 0 ? void 0 : user._id, interactionNumber: 1 });
+        const data = Object.assign(Object.assign({}, payload), { interactionAuthId: isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id, interactionNumber: 1 });
         const result = yield interaction_model_1.Interaction.create(data);
+        const actionData = {
+            actions: (isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.actions) + 1,
+            InteractedPeopleId: [isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id]
+        };
+        yield post_model_1.Post.findByIdAndUpdate({ _id: payload === null || payload === void 0 ? void 0 : payload.postId }, actionData, {
+            new: true,
+            runValidators: true,
+        });
         return {
             message: 'Liked this post.',
             result,
         };
     }
-    if ((payload === null || payload === void 0 ? void 0 : payload.interactionType) === 'like') {
+    if ((payload === null || payload === void 0 ? void 0 : payload.interactionType) === 'like' && isUserExists && isPostExists) {
         const data = {
             interactionNumber: (isInteractionAlive === null || isInteractionAlive === void 0 ? void 0 : isInteractionAlive.interactionNumber) + 1,
         };
         const result = yield interaction_model_1.Interaction.findOneAndUpdate({ postId: payload === null || payload === void 0 ? void 0 : payload.postId }, data, {
+            new: true,
+            runValidators: true,
+        });
+        const actionData = {
+            actions: (isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.actions) + 1,
+            InteractedPeopleId: [...isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.InteractedPeopleId, `${isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists._id}`]
+            // isPostExists?.InteractedPeopleId?.push(`${user._id}`)
+        };
+        yield post_model_1.Post.findByIdAndUpdate({ _id: payload === null || payload === void 0 ? void 0 : payload.postId }, actionData, {
             new: true,
             runValidators: true,
         });
@@ -56,6 +74,15 @@ const createInteractionIntoDB = (payload, user) => __awaiter(void 0, void 0, voi
             interactionNumber: (isInteractionAlive === null || isInteractionAlive === void 0 ? void 0 : isInteractionAlive.interactionNumber) - 1,
         };
         const result = yield interaction_model_1.Interaction.findOneAndUpdate({ postId: payload === null || payload === void 0 ? void 0 : payload.postId }, data, {
+            new: true,
+            runValidators: true,
+        });
+        const filteredInteractedPeopleId = (_a = isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.InteractedPeopleId) === null || _a === void 0 ? void 0 : _a.filter(id => id !== `${user._id}`);
+        const actionData = {
+            actions: (isPostExists === null || isPostExists === void 0 ? void 0 : isPostExists.actions) - 1,
+            InteractedPeopleId: filteredInteractedPeopleId
+        };
+        yield post_model_1.Post.findByIdAndUpdate({ _id: payload === null || payload === void 0 ? void 0 : payload.postId }, actionData, {
             new: true,
             runValidators: true,
         });

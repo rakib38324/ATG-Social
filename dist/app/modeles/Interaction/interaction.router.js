@@ -11,4 +11,5 @@ const interaction_validation_1 = require("./interaction.validation");
 const interaction_controller_1 = require("./interaction.controller");
 const router = express_1.default.Router();
 router.post('/like-unlike', (0, Auth_1.default)(), (0, validateRequest_1.default)(interaction_validation_1.interactionValidation.createInteractionValidationSchema), interaction_controller_1.InteractionControllers.createInteraction);
+router.get('/like-unlike?:postId', interaction_controller_1.InteractionControllers.createInteraction);
 exports.interactionRouters = router;

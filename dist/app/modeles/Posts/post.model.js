@@ -8,6 +8,7 @@ const PostSchema = new mongoose_1.Schema({
     description: { type: String, required: true },
     author: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Candidate' },
     date: { type: String },
-    // image_public_id: { type: String, required: true },
+    actions: { type: Number },
+    InteractedPeopleId: [{ type: String }],
 });
 exports.Post = (0, mongoose_1.model)('Post', PostSchema);

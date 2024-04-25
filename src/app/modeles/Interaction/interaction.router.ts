@@ -13,4 +13,6 @@ router.post(
   InteractionControllers.createInteraction,
 );
 
+router.get('/like-unlike?:postId', InteractionControllers.createInteraction);
+
 export const interactionRouters = router;

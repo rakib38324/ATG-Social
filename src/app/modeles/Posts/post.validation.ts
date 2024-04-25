@@ -11,6 +11,7 @@ const createPostValidationSchema = z.object({
       .max(260),
     date: z.string().optional(),
     author: z.string().optional(),
+    actions: z.number().optional(),
   }),
 });
 
@@ -28,6 +29,7 @@ const updatePostValidationSchema = z.object({
       .optional(),
     date: z.string().optional(),
     author: z.string().optional(),
+    actions: z.number().optional(),
   }),
 });
 

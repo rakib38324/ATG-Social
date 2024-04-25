@@ -30,6 +30,7 @@ const createPostIntoDB = async (payload: TPost, authorInfo: JwtPayload) => {
     ...payload,
     date: new Date(),
     author: isUserExists?._id,
+    actions: 0,
     // image: secure_url,
     // image_public_id: public_id,
   };

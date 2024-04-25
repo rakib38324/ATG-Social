@@ -11,7 +11,7 @@ const createInteraction = catchAsync(async (req, res) => {
   commonRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Interaction arrived successfully',
+    message: result?.message,
     data: result,
   });
 });
